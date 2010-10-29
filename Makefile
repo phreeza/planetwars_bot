@@ -1,0 +1,90 @@
+CC=gcc
+CPP=g++
+
+TARGETS=playgame showgame playnview \
+	BotCppStarterpack \
+	BotCppStarterpackDebug \
+	BotExampleDual \
+	BotExampleRage \
+	BotExampleBully \
+	BotExampleProspector \
+	BotMyBot \
+	BotExampleRandom
+
+CFLAGS := -Wall -O2 -g
+#CFLAGS := $(CFLAGS) $(shell \
+#	[ "$$(uname -s)" = "Darwin" ] && echo "-arch" && uname -m; \
+#)
+
+LFLAGS := $(CFLAGS)
+
+SDL_CFLAGS := $(shell \
+	[ "$$(uname -s)" = "Darwin" ] && echo "-I /Library/Frameworks/SDL.framework/Headers" && exit 0; \
+	sdl-config --cflags; \
+)
+
+SDL_LFLAGS := $(shell \
+	[ "$$(uname -s)" = "Darwin" ] && echo "-framework SDL -framework Cocoa SDLmain.m" && exit 0; \
+	sdl-config --libs; \
+)
+
+SDL_LFLAGS := $(SDL_CFLAGS) $(SDL_LFLAGS)
+VIEWER_OBJS := viewer.o font.o SDL_picofont.o gfx.o
+
+all: $(TARGETS)
+
+clean:
+	rm -rf *.o $(TARGETS)
+
+engine.o: engine.cpp utils.h process.h
+	$(CPP) $(CFLAGS) $< -c -o $@
+
+game.o: game.cpp game.h utils.h
+	$(CPP) $(CFLAGS) $< -c -o $@
+
+GameTree.o: GameTree.cpp game.h GameTree.h
+	$(CPP) $(CFLAGS) $< -c -o $@
+
+utils.o: utils.cpp utils.h
+	$(CPP) $(CFLAGS) $< -c -o $@
+
+process.o: process.cpp process.h utils.h
+	$(CPP) $(CFLAGS) $< -c -o $@
+
+playgame.o: playgame.cpp engine.h
+	$(CPP) $(CFLAGS) $< -c -o $@
+
+showgame.o: showgame.cpp viewer.h utils.h
+	$(CPP) $(CFLAGS) $(SDL_CFLAGS) $< -c -o $@
+
+playnview.o: playnview.cpp viewer.h engine.h
+	$(CPP) $(CFLAGS) $(SDL_CFLAGS) $< -c -o $@
+
+viewer.o: viewer.cpp viewer.h utils.h
+	$(CPP) $(CFLAGS) $(SDL_CFLAGS) $< -c -o $@
+
+font.o: font.c
+	$(CC) $(CFLAGS) $(SDL_CFLAGS) $< -c -o $@
+
+gfx.o: gfx.cpp gfx.h utils.h
+	$(CPP) $(CFLAGS) $(SDL_CFLAGS) $< -c -o $@
+	
+SDL_picofont.o: SDL_picofont.cpp SDL_picofont.h
+	$(CPP) $(CFLAGS) $(SDL_CFLAGS) $< -c -o $@
+	
+#%.o: %.cpp
+
+playgame: engine.o playgame.o game.o utils.o process.o
+	$(CPP) $(LFLAGS) $^ -o $@
+
+showgame: utils.o game.o showgame.o $(VIEWER_OBJS)
+	$(CPP) $(LFLAGS) $(SDL_LFLAGS) $^ -o $@
+
+playnview: utils.o game.o playnview.o engine.o $(VIEWER_OBJS) process.o
+	$(CPP) $(LFLAGS) $(SDL_LFLAGS) $^ -o $@
+
+Bot%: Bot%.cpp game.o utils.o GameTree.o
+	$(CPP) $(LFLAGS) $^ -o $@
+
+BotCppStarterpackDebug: BotCppStarterpack.cpp game.o utils.o $(VIEWER_OBJS)
+	$(CPP) $(LFLAGS) $(SDL_CFLAGS) $(SDL_LFLAGS) -D GAMEDEBUG $^ -o $@
