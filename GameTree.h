@@ -21,12 +21,12 @@ struct UCTNode
     UCTNode * parent;
     typedef std::vector<UCTNode *> UCTNodeVector;
     UCTNodeVector children;
-    int n_total,sum_results,depth;
+    int n_total,sum_results,depth,time_step;
     float uct_val;
     OrderVector by_orders;
 
     UCTNode(GameState _state, UCTNode * _parent = NULL):
-        state(_state),parent(_parent),children(UCTNodeVector()),n_total(0),sum_results(0),depth(0),uct_val(0.0) {}
+        state(_state),parent(_parent),children(UCTNodeVector()),n_total(0),sum_results(0),depth(0),time_step(0),uct_val(0.0) {}
     ~UCTNode();
 
     OrderVector RandomOrders();

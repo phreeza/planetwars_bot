@@ -8,10 +8,11 @@ void DoTurn(Game & pw) {
 
     GameState gs(pw.state);
     UCTNode root(gs);
+    root.time_step = pw.numTurns;
     int tmp_val;
     UCTNode * tmp_ptr;
     long endwait;
-    endwait = currentTimeMillis() + 1900;
+    endwait = currentTimeMillis() + 900;
     int i=0;
    /* 
     for (int n = 0;n<1000;n++)

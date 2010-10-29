@@ -23,7 +23,7 @@ void UCTNode::PruneOrders(Game & game)
     UCTNode * tmp_ptr;
     while((tmp_orders.size()==by_orders.size())&&(tmp_orders.size()>0))
     {
-        for (OrderVector::iterator it = by_orders.begin();it!=by_orders.end();it++)
+        //for (OrderVector::iterator it = by_orders.begin();it!=by_orders.end();it++)
         for (int it = 0;it<(int)by_orders.size();it++)
         {
             tmp_orders = by_orders;
@@ -77,6 +77,7 @@ UCTNode * UCTNode::AddChild(OrderVector & orders, Game & game)
         game.DoTimeStep();
     UCTNode * ret = new UCTNode (game.state,this);
     ret->depth = depth+1;
+    ret->time_step = time_step+1;
     if (ret->depth == 1)
         ret->by_orders = orders;
     children.push_back(ret);
@@ -86,9 +87,12 @@ UCTNode * UCTNode::AddChild(OrderVector & orders, Game & game)
 int UCTNode::FinalValue(Game & game)
 {
     game.state = state;
-    while(game.state.fleets.size()>0)
-       game.DoTimeStep(); 
-    return game.Production(1)-game.Production(2);
+    while((game.state.fleets.size()>0)&&(time_step<200))
+    {
+        game.DoTimeStep();
+        time_step++;
+    }
+    return (state.NumShips(1)-state.NumShips(2)) + (200-time_step)*(game.Production(1)-game.Production(2));
 }
 void UCTNode::PropagateResult(int result)
 {
@@ -120,7 +124,7 @@ float UCTNode::UCTValue(int N)
         ln = log(N);
     //float sigm = avg/sqrt(1+(avg*avg));
     //return avg+0.7*sqrt(ln/(n_total));
-    return avg+0.7*InvSqrt(((float)n_total)/ln);
+    return avg+140.*InvSqrt(((float)n_total)/ln);
 }
 
 UCTNode * UCTNode::FindMaxValue(int N)
