@@ -88,3 +88,5 @@ Bot%: Bot%.cpp game.o utils.o GameTree.o
 
 BotCppStarterpackDebug: BotCppStarterpack.cpp game.o utils.o $(VIEWER_OBJS)
 	$(CPP) $(LFLAGS) $(SDL_CFLAGS) $(SDL_LFLAGS) -D GAMEDEBUG $^ -o $@
+tcp: tcp.c
+	$(CC) -o tcp tcp.c

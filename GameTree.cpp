@@ -38,6 +38,42 @@ void UCTNode::PruneOrders(Game & game)
     }
 }
 
+OrderVector UCTNode::SemiRandomOrders()
+{
+	typedef std::vector<PlanetState> Planets;
+    float p_send = 0.6;
+    OrderVector ret;
+    int player = (depth % 2) + 1;
+    for(int p = 0;(size_t)p<state.planets.size();p++)
+    {
+        if ((state.planets[p].owner == player)
+                &&(state.planets[p].numShips > 0)
+                &&((float)rand()/RAND_MAX<p_send))
+        {
+            int target = p;
+            while (target == p)
+            {
+                target = rand()%state.planets.size();
+            }
+            switch (state.planets[target].owner)
+            {
+                case 0:
+                    switch()
+
+
+
+            }
+            ret.push_back(
+                    Order(player,
+                        p,
+                        target,
+                        (rand()%(state.planets[p].numShips))+1)
+                    );
+        }
+    }
+   return ret; 
+}
+
 OrderVector UCTNode::RandomOrders()
 {
 	typedef std::vector<PlanetState> Planets;
@@ -124,7 +160,7 @@ float UCTNode::UCTValue(int N)
         ln = log(N);
     //float sigm = avg/sqrt(1+(avg*avg));
     //return avg+0.7*sqrt(ln/(n_total));
-    return avg+140.*InvSqrt(((float)n_total)/ln);
+    return avg+1400.*InvSqrt(((float)n_total)/ln);
 }
 
 UCTNode * UCTNode::FindMaxValue(int N)
