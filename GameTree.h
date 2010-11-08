@@ -30,6 +30,7 @@ struct UCTNode
     ~UCTNode();
 
     OrderVector RandomOrders();
+    OrderVector SemiRandomOrders();
     UCTNode * AddChild(OrderVector&, Game&);
     UCTNode * AddChild(GameState);
     void PruneOrders(Game & game);

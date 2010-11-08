@@ -26,7 +26,7 @@ void DoTurn(Game & pw) {
     }*/
     int tree_width[4] = {500,100,10,10};
     int n_nodes = 0;
-    OrderVector o = root.RandomOrders();
+    OrderVector o = root.SemiRandomOrders();
     root.AddChild(o,pw);
     while(currentTimeMillis()<endwait)
     {
@@ -34,7 +34,7 @@ void DoTurn(Game & pw) {
         if ((int)tmp_ptr->parent->children.size()<tree_width[std::min(2,tmp_ptr->depth-1)])
         //if(rand()%2==0)
         {
-            OrderVector o = tmp_ptr->parent->RandomOrders();
+            OrderVector o = tmp_ptr->parent->SemiRandomOrders();
             tmp_ptr = tmp_ptr->parent->AddChild(o,pw);
             n_nodes++;
         }
@@ -44,7 +44,7 @@ void DoTurn(Game & pw) {
             tmp_ptr->PropagateResult(-tmp_val);
         else
             tmp_ptr->PropagateResult(tmp_val);
-        OrderVector o = tmp_ptr->RandomOrders();
+        OrderVector o = tmp_ptr->SemiRandomOrders();
         tmp_ptr->AddChild(o,pw);
         n_nodes++;
         i++;
@@ -61,9 +61,7 @@ void DoTurn(Game & pw) {
             dothis = *it;
         }
     }
-    std::cerr << "Before pruning: "<< dothis->by_orders.size()<< std::endl;
-    dothis->PruneOrders(pw);
-    std::cerr << "After pruning:  "<< dothis->by_orders.size()<< std::endl;
+    //dothis->PruneOrders(pw);
     std::cerr << i <<"\t" <<root.n_total <<"\t"<< dothis->n_total<< "\t" <<root.children.size() <<"\t" << n_nodes<< "\t"<<((float)dothis->sum_results/dothis->n_total) << std::endl;
 
 

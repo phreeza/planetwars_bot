@@ -51,23 +51,53 @@ OrderVector UCTNode::SemiRandomOrders()
                 &&((float)rand()/RAND_MAX<p_send))
         {
             int target = p;
+            int tosend = 0;
             while (target == p)
             {
                 target = rand()%state.planets.size();
             }
-            switch (state.planets[target].owner)
+            if (state.planets[target].owner != player)
             {
+                switch(rand()%3)
+                {
                 case 0:
-                    switch()
-
-
-
+                    //send a random ammount
+                    tosend = (rand()%(state.planets[p].numShips))+1;
+                    break;
+                case 1:
+                    //send just what is needed to conquer
+                    tosend = std::min(state.planets[p].numShips-5,state.planets[target].numShips+1);
+                    break;
+                case 2:
+                    //send all out attack
+                    tosend = state.planets[p].numShips-5;
+                    break;
+                }
             }
-            ret.push_back(
+            else
+            {
+                switch(rand()%3)
+                {
+                case 0:
+                    //send a random ammount
+                    tosend = (rand()%(state.planets[p].numShips))+1;
+                    break;
+                case 1:
+                    //send stream
+                    tosend = std::min(state.planets[p].numShips-5,state.planets[p].growthRate);
+                    break;
+                case 2:
+                    //send all out defense
+                    tosend = state.planets[p].numShips-5;
+                    break;
+                }
+            }
+            if (tosend>0)
+                ret.push_back(
                     Order(player,
                         p,
                         target,
-                        (rand()%(state.planets[p].numShips))+1)
+                        tosend)
                     );
         }
     }
