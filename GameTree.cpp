@@ -84,7 +84,7 @@ OrderVector UCTNode::SemiRandomOrders()
                     break;
                 case 1:
                     //send stream
-                    tosend = std::min(state.planets[p].numShips-5,state.planets[p].growthRate);
+                    tosend = std::min(state.planets[p].numShips-5,5);
                     break;
                 case 2:
                     //send all out defense
