@@ -41,7 +41,7 @@ void UCTNode::PruneOrders(Game & game)
 OrderVector UCTNode::SemiRandomOrders()
 {
 	typedef std::vector<PlanetState> Planets;
-    float p_send = 0.6;
+    float p_send = 0.3;
     OrderVector ret;
     int player = (depth % 2) + 1;
     for(int p = 0;(size_t)p<state.planets.size();p++)
@@ -58,17 +58,17 @@ OrderVector UCTNode::SemiRandomOrders()
             }
             if (state.planets[target].owner != player)
             {
-                switch(rand()%3)
+                switch(rand()%2)
                 {
-                case 0:
+                /*case 0:
                     //send a random ammount
                     tosend = (rand()%(state.planets[p].numShips))+1;
-                    break;
-                case 1:
+                    break;*/
+                case 0:
                     //send just what is needed to conquer
                     tosend = std::min(state.planets[p].numShips-5,state.planets[target].numShips+1);
                     break;
-                case 2:
+                case 1:
                     //send all out attack
                     tosend = state.planets[p].numShips-5;
                     break;
@@ -76,17 +76,13 @@ OrderVector UCTNode::SemiRandomOrders()
             }
             else
             {
-                switch(rand()%3)
+                switch(rand()%2)
                 {
                 case 0:
-                    //send a random ammount
-                    tosend = (rand()%(state.planets[p].numShips))+1;
-                    break;
-                case 1:
                     //send stream
                     tosend = std::min(state.planets[p].numShips-5,5);
                     break;
-                case 2:
+                case 1:
                     //send all out defense
                     tosend = state.planets[p].numShips-5;
                     break;
