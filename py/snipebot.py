@@ -28,7 +28,7 @@ class SnipeBot(BaseBot):
                 reach_turn = self.turn + p.distance(e)
                 if reach_turn >= 200:
                     continue
-                if(future.owner[199][e.id] == 2 and future.ship_count[reach_turn][e.id]<p.ship_count-5-sent[p]):
+                if(future.owner[199][e.id] == 2 and future.owner[reach_turn][e.id] == 2 and future.ship_count[reach_turn][e.id]<p.ship_count-5-sent[p]):
                     p.send_fleet(e,future.ship_count[reach_turn][e.id]+5)
                     sent[p] += future.ship_count[reach_turn][e.id]+5
 
