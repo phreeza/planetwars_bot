@@ -22,3 +22,6 @@ BotExampleRage
 BotExampleRandom
 BotMyBot
 *.swp
+tcp
+!tcp/
+*.pyc
