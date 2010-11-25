@@ -38,7 +38,7 @@ class SnipeBot(BaseBot):
         for p in self.universe.my_planets:
             min_dist = 9999
             min_planet = None
-            for e in self.universe.nobodys_planets:
+            for e in self.universe.nobodies_planets:
                 if e.distance(p) < min_dist:
                     min_planet = e
                     min_dist = e.distance(p)
