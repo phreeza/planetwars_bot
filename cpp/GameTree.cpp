@@ -154,7 +154,11 @@ int UCTNode::FinalValue(Game & game)
         game.DoTimeStep();
         time_step++;
     }
-    return (state.NumShips(1)-state.NumShips(2)) + (200-time_step)*(game.Production(1)-game.Production(2));
+    int n1 = state.NumShips(1); 
+    int n2 = state.NumShips(2); 
+    if (n1==0) return -99999;
+    else if (n2==0) return 99999;
+    else return (n1-n2) + (200-time_step)*(game.Production(1)-game.Production(2));
 }
 void UCTNode::PropagateResult(float result)
 {
