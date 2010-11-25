@@ -16,6 +16,9 @@ class SnipeBot(BaseBot):
 
     def do_turn(self):
         self.turn += 1
+        if self.turn == 1:
+            self.do_greedy:
+            return
         future = Future(self.universe,self.turn)
         for l in future.owner:
             log.debug(l)
@@ -31,7 +34,17 @@ class SnipeBot(BaseBot):
                 if(future.owner[199][e.id] == 2 and future.owner[reach_turn][e.id] == 2 and future.ship_count[reach_turn][e.id]<p.ship_count-5-sent[p]):
                     p.send_fleet(e,future.ship_count[reach_turn][e.id]+5)
                     sent[p] += future.ship_count[reach_turn][e.id]+5
+    def do_greedy:
+        for p in self.universe.my_planets:
+            min_dist = 9999
+            min_planet = None
+            for e in self.universe.nobodys_planets:
+                if e.distance(p) < min_dist:
+                    min_planet = e
+                    min_dist = e.distance(p)
+            p.send_fleet(min_planet,min_planet.ship_count+5)
 
+        
 class Future:
     def __init__(self,universe,turn):
         self.my_arrivals = [[0 for r in universe.planets] for q in range(200)]
