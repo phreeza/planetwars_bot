@@ -156,7 +156,7 @@ int UCTNode::FinalValue(Game & game)
     }
     return (state.NumShips(1)-state.NumShips(2)) + (200-time_step)*(game.Production(1)-game.Production(2));
 }
-void UCTNode::PropagateResult(int result)
+void UCTNode::PropagateResult(float result)
 {
     n_total++;
     sum_results += result;
@@ -185,8 +185,8 @@ float UCTNode::UCTValue(int N)
     else
         ln = log(N);
     //float sigm = avg/sqrt(1+(avg*avg));
-    //return avg+0.7*sqrt(ln/(n_total));
-    return avg+1400.*InvSqrt(((float)n_total)/ln);
+    return avg+0.1*sqrt(ln/(n_total));
+    //return avg+1.4*InvSqrt(((float)n_total)/ln);
 }
 
 UCTNode * UCTNode::FindMaxValue(int N)

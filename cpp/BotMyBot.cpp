@@ -9,7 +9,7 @@ void DoTurn(Game & pw) {
     GameState gs(pw.state);
     UCTNode root(gs);
     root.time_step = pw.numTurns;
-    int tmp_val;
+    float tmp_val;
     UCTNode * tmp_ptr;
     long endwait;
     endwait = currentTimeMillis() + 900;
@@ -24,8 +24,9 @@ void DoTurn(Game & pw) {
         i++;
 
     }*/
-    int tree_width[4] = {500,100,10,10};
+    int tree_width[3] = {500,100,5};
     int n_nodes = 0;
+    int baseline_val = root.FinalValue(pw);
     OrderVector o = root.SemiRandomOrders();
     root.AddChild(o,pw);
     while(currentTimeMillis()<endwait)
@@ -34,17 +35,20 @@ void DoTurn(Game & pw) {
         if ((int)tmp_ptr->parent->children.size()<tree_width[std::min(2,tmp_ptr->depth-1)])
         //if(rand()%2==0)
         {
-            OrderVector o = tmp_ptr->parent->SemiRandomOrders();
+            OrderVector o = tmp_ptr->parent->RandomOrders();
             tmp_ptr = tmp_ptr->parent->AddChild(o,pw);
             n_nodes++;
         }
-        
-        tmp_val = tmp_ptr->FinalValue(pw);
+       
+        if (baseline_val != 0) 
+            tmp_val = ((float)(tmp_ptr->FinalValue(pw)-baseline_val))/abs(baseline_val);
+        else
+            tmp_val = ((float)(tmp_ptr->FinalValue(pw)-baseline_val));
         if(tmp_ptr->depth%2==0)
             tmp_ptr->PropagateResult(-tmp_val);
         else
             tmp_ptr->PropagateResult(tmp_val);
-        OrderVector o = tmp_ptr->SemiRandomOrders();
+        OrderVector o = tmp_ptr->RandomOrders();
         tmp_ptr->AddChild(o,pw);
         n_nodes++;
         i++;
@@ -62,7 +66,7 @@ void DoTurn(Game & pw) {
         }
     }
     //dothis->PruneOrders(pw);
-    std::cerr << i <<"\t" <<root.n_total <<"\t"<< dothis->n_total<< "\t" <<root.children.size() <<"\t" << n_nodes<< "\t"<<((float)dothis->sum_results/dothis->n_total) << std::endl;
+    std::cerr << i <<"\t" <<root.n_total <<"\t"<< dothis->n_total<< "\t" <<root.children.size() <<"\t" << n_nodes<< "\t"<<((float)dothis->sum_results/dothis->n_total) <<"\t" <<baseline_val <<std::endl;
 
 
     for (OrderVector::iterator o = dothis->by_orders.begin();o!=dothis->by_orders.end();o++)
