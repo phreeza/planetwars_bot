@@ -34,7 +34,7 @@ class SnipeBot(BaseBot):
                 if(future.owner[199][e.id] == 2 and future.owner[reach_turn][e.id] == 2 and future.ship_count[reach_turn][e.id]<p.ship_count-5-sent[p]):
                     p.send_fleet(e,future.ship_count[reach_turn][e.id]+5)
                     sent[p] += future.ship_count[reach_turn][e.id]+5
-    def do_greedy():
+    def do_greedy(self):
         for p in self.universe.my_planets:
             min_dist = 9999
             min_planet = None
