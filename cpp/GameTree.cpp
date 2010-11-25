@@ -189,7 +189,7 @@ float UCTNode::UCTValue(int N)
     else
         ln = log(N);
     //float sigm = avg/sqrt(1+(avg*avg));
-    return avg+0.1*sqrt(ln/(n_total));
+    return avg+1.1*sqrt(ln/(n_total));
     //return avg+1.4*InvSqrt(((float)n_total)/ln);
 }
 
