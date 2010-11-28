@@ -111,10 +111,10 @@ void PlanetState::FightBattle(int myPlanetIndex, const std::vector<Fleet>& fleet
 //   * Fleets are advanced towards their destinations.
 //   * Fleets that arrive at their destination are dealt with.
 void GameState::DoTimeStep(const GameDesc& desc) {
-	FleetsTimeStep(fleets);
+	Fleets finalFleets = FleetsTimeStep(fleets);
 	
 	for (size_t p = 0; p < planets.size(); ++p)
-		planets[p].DoTimeStep(p, desc.planets[p].growthRate, fleets);
+		planets[p].DoTimeStep(p, desc.planets[p].growthRate, finalFleets);
 	
 	RemoveFinalFleets(fleets);
 }

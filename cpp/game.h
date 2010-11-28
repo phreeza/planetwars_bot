@@ -58,12 +58,18 @@ struct Fleet {
 
 typedef std::vector<Fleet> Fleets;
 
-inline void FleetsTimeStep(Fleets::iterator f, const Fleets::iterator& fleetEnd) {
-	for (; f != fleetEnd; ++f) f->TimeStep();
+inline Fleets FleetsTimeStep(Fleets::iterator f, const Fleets::iterator& fleetEnd) {
+    Fleets ret;
+	for (; f != fleetEnd; ++f) 
+    {
+        f->TimeStep();
+        if (f->turnsRemaining == 0) ret.push_back(*f);
+    }
+    return ret;
 }
 
-inline void FleetsTimeStep(Fleets& fleets) {
-	FleetsTimeStep(fleets.begin(), fleets.end());
+inline Fleets FleetsTimeStep(Fleets& fleets) {
+	return FleetsTimeStep(fleets.begin(), fleets.end());
 }
 
 inline void RemoveFinalFleets(Fleets& fleets) {
